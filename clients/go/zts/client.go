@@ -582,6 +582,45 @@ func (client ZTSClient) PostRoleCertificateRequest(domainName DomainName, roleNa
 	}
 }
 
+func (client ZTSClient) PostRoleCertificateRequestExt(domainName DomainName, req *RoleCertificateRequest) (*RoleCertificate, error) {
+	var data *RoleCertificate
+	url := client.URL + "/domain/" + fmt.Sprint(domainName) + "/rolecert"
+	contentBytes, err := json.Marshal(req)
+	if err != nil {
+		return data, err
+	}
+	resp, err := client.httpPost(url, nil, contentBytes)
+	if err != nil {
+		return data, err
+	}
+	defer resp.Body.Close()
+	switch resp.StatusCode {
+	case 200:
+		err = json.NewDecoder(resp.Body).Decode(&data)
+		if err != nil {
+			return data, err
+		}
+		return data, nil
+	default:
+		var errobj rdl.ResourceError
+		contentBytes, err = ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return data, err
+		}
+		err = json.Unmarshal(contentBytes, &errobj)
+		if err != nil {
+			return data, err
+		}
+		if errobj.Code == 0 {
+			errobj.Code = resp.StatusCode
+		}
+		if errobj.Message == "" {
+			errobj.Message = string(contentBytes)
+		}
+		return data, errobj
+	}
+}
+
 func (client ZTSClient) GetAccess(domainName DomainName, roleName EntityName, principal EntityName) (*Access, error) {
 	var data *Access
 	url := client.URL + "/access/domain/" + fmt.Sprint(domainName) + "/role/" + fmt.Sprint(roleName) + "/principal/" + fmt.Sprint(principal)

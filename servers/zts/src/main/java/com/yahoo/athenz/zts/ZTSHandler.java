@@ -21,6 +21,7 @@ public interface ZTSHandler {
     Response getDomainSignedPolicyData(ResourceContext context, String domainName, String matchingTag);
     RoleToken getRoleToken(ResourceContext context, String domainName, String role, Integer minExpiryTime, Integer maxExpiryTime, String proxyForPrincipal);
     RoleToken postRoleCertificateRequest(ResourceContext context, String domainName, String roleName, RoleCertificateRequest req);
+    RoleCertificate postRoleCertificateRequestExt(ResourceContext context, RoleCertificateRequest req);
     Access getAccess(ResourceContext context, String domainName, String roleName, String principal);
     RoleAccess getRoleAccess(ResourceContext context, String domainName, String principal);
     TenantDomains getTenantDomains(ResourceContext context, String providerDomainName, String userName, String roleName, String serviceName);

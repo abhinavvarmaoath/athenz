@@ -169,8 +169,14 @@ func init() {
 	tRoleCertificateRequest := rdl.NewStructTypeBuilder("Struct", "RoleCertificateRequest")
 	tRoleCertificateRequest.Comment("RoleCertificateRequest - a certificate signing request")
 	tRoleCertificateRequest.Field("csr", "String", false, nil, "")
+	tRoleCertificateRequest.Field("proxyForPrincipal", "EntityName", true, nil, "this request is proxy for this principal")
 	tRoleCertificateRequest.Field("expiryTime", "Int64", false, nil, "")
 	sb.AddType(tRoleCertificateRequest.Build())
+
+	tRoleCertificate := rdl.NewStructTypeBuilder("Struct", "RoleCertificate")
+	tRoleCertificate.Comment("RoleCertificate - a role certificate")
+	tRoleCertificate.Field("x509Certificate", "String", false, nil, "")
+	sb.AddType(tRoleCertificate.Build())
 
 	tAccess := rdl.NewStructTypeBuilder("Struct", "Access")
 	tAccess.Comment("Access can be checked and returned as this resource.")
@@ -447,6 +453,18 @@ func init() {
 	mPostRoleCertificateRequest.Exception("NOT_FOUND", "ResourceError", "")
 	mPostRoleCertificateRequest.Exception("UNAUTHORIZED", "ResourceError", "")
 	sb.AddResource(mPostRoleCertificateRequest.Build())
+
+	mPostRoleCertificateRequestExt := rdl.NewResourceBuilder("RoleCertificate", "POST", "/domain/{domainName}/rolecert")
+	mPostRoleCertificateRequestExt.Comment("Return a TLS certificate for the list of roles that the principal can assume. Role certificates are valid for 7 days by default The principal is in the CN field of the Subject and the SAN URI field contains the athenz roles the principal can assume")
+	mPostRoleCertificateRequestExt.Name("PostRoleCertificateRequestExt")
+	mPostRoleCertificateRequestExt.Input("domainName", "DomainName", true, "", "", false, nil, "name of the domain")
+	mPostRoleCertificateRequestExt.Input("req", "RoleCertificateRequest", false, "", "", false, nil, "csr request")
+	mPostRoleCertificateRequestExt.Auth("", "", true, "")
+	mPostRoleCertificateRequestExt.Exception("BAD_REQUEST", "ResourceError", "")
+	mPostRoleCertificateRequestExt.Exception("FORBIDDEN", "ResourceError", "")
+	mPostRoleCertificateRequestExt.Exception("NOT_FOUND", "ResourceError", "")
+	mPostRoleCertificateRequestExt.Exception("UNAUTHORIZED", "ResourceError", "")
+	sb.AddResource(mPostRoleCertificateRequestExt.Build())
 
 	mGetAccess := rdl.NewResourceBuilder("Access", "GET", "/access/domain/{domainName}/role/{roleName}/principal/{principal}")
 	mGetAccess.Input("domainName", "DomainName", true, "", "", false, nil, "name of the domain")

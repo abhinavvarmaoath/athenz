@@ -65,6 +65,7 @@ public final class ZTSConsts {
     public static final String ZTS_PROP_CERTSIGN_MAX_EXPIRY_TIME = "athenz.zts.certsign_max_expiry_time";
     
     public static final String ZTS_PROP_LEAST_PRIVILEGE_PRINCIPLE  = "athenz.zts.least_privilege_principle";
+    public static final String ZTS_PROP_SINGLE_DOMAIN_IN_ROLE_CERT = "athenz.zts.single_domain_in_role_cert";
     public static final String ZTS_PROP_ROLE_TOKEN_MAX_TIMEOUT     = "athenz.zts.role_token_max_timeout";
     public static final String ZTS_PROP_ROLE_TOKEN_DEFAULT_TIMEOUT = "athenz.zts.role_token_default_timeout";
     public static final String ZTS_PROP_SIGNED_POLICY_TIMEOUT      = "athenz.zts.signed_policy_timeout";
@@ -141,6 +142,7 @@ public final class ZTSConsts {
 
     public static final String ZTS_CERT_INSTANCE_ID_DNS  = ".instanceid.athenz.";
     public static final String ZTS_CERT_INSTANCE_ID_URI  = "athenz://instanceid/";
+    public static final String ZTS_CERT_ROLE_URI         = "athenz://role/";
     public static final String ZTS_CERT_SPIFFE_URI       = "spiffe://";
 
     public static final String ZTS_INSTANCE_SAN_DNS        = "sanDNS";

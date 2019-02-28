@@ -144,7 +144,12 @@ public class ZTSSchema {
         sb.structType("RoleCertificateRequest")
             .comment("RoleCertificateRequest - a certificate signing request")
             .field("csr", "String", false, "")
+            .field("proxyForPrincipal", "EntityName", true, "this request is proxy for this principal")
             .field("expiryTime", "Int64", false, "");
+
+        sb.structType("RoleCertificate")
+            .comment("RoleCertificate - a role certificate")
+            .field("x509Certificate", "String", false, "");
 
         sb.structType("Access")
             .comment("Access can be checked and returned as this resource.")
@@ -414,6 +419,21 @@ public class ZTSSchema {
             .comment("Return a TLS certificate for the specific role in the namespace that the principal can assume. Role certificates are valid for 30 days by default")
             .pathParam("domainName", "DomainName", "name of the domain")
             .pathParam("roleName", "EntityName", "name of role")
+            .input("req", "RoleCertificateRequest", "csr request")
+            .auth("", "", true)
+            .expected("OK")
+            .exception("BAD_REQUEST", "ResourceError", "")
+
+            .exception("FORBIDDEN", "ResourceError", "")
+
+            .exception("NOT_FOUND", "ResourceError", "")
+
+            .exception("UNAUTHORIZED", "ResourceError", "")
+;
+
+        sb.resource("RoleCertificateRequest", "POST", "/rolecert")
+            .comment("Return a TLS certificate for the list of roles that the principal can assume. Role certificates are valid for 7 days by default The principal is in the CN field of the Subject and the SAN URI field contains the athenz roles the principal can assume")
+            .name("PostRoleCertificateRequestExt")
             .input("req", "RoleCertificateRequest", "csr request")
             .auth("", "", true)
             .expected("OK")
